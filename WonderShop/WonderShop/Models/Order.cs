@@ -14,5 +14,6 @@ namespace WonderShop.Models
         public int? OrderNumber { get; set; }
         public string Status { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }
