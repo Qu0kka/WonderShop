@@ -31,12 +31,12 @@ namespace WonderShop.DAL
 
             var orderItems = new List<OrderItem>
             {
-                new OrderItem {OrderID = 1, ItemID = 1, ItemCount = 3, ItemPrice = 1000 },
-                new OrderItem {OrderID = 1, ItemID = 2, ItemCount = 1, ItemPrice = 1500 },
-                new OrderItem {OrderID = 2, ItemID = 1, ItemCount = 2, ItemPrice = 1000 },
-                new OrderItem {OrderID = 2, ItemID = 2, ItemCount = 5, ItemPrice = 1500 },
-                new OrderItem {OrderID = 2, ItemID = 3, ItemCount = 1, ItemPrice = 2000 },
-                new OrderItem {OrderID = 3, ItemID = 3, ItemCount = 7, ItemPrice = 2000 }
+                new OrderItem {OrderID = 1, ItemID = 0, ItemCount = 3, ItemPrice = 1000 },
+                new OrderItem {OrderID = 1, ItemID = 1, ItemCount = 1, ItemPrice = 1500 },
+                new OrderItem {OrderID = 2, ItemID = 0, ItemCount = 2, ItemPrice = 1000 },
+                new OrderItem {OrderID = 2, ItemID = 1, ItemCount = 5, ItemPrice = 1500 },
+                new OrderItem {OrderID = 2, ItemID = 2, ItemCount = 1, ItemPrice = 2000 },
+                new OrderItem {OrderID = 3, ItemID = 2, ItemCount = 7, ItemPrice = 2000 }
             };
             orderItems.ForEach(s => context.OrderItems.Add(s));
             context.SaveChanges();
