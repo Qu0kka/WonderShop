@@ -10,17 +10,17 @@ using WonderShop.Models;
 
 namespace WonderShop.Controllers
 {
-    public class ItemController : Controller
+    public class ItemsController : Controller
     {
         private ShopContext db = new ShopContext();
 
-        // GET: Item
+        // GET: Items
         public ActionResult Index()
         {
             return View(db.Items.ToList());
         }
 
-        // GET: Item/Details/5
+        // GET: Items/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,13 +35,13 @@ namespace WonderShop.Controllers
             return View(item);
         }
 
-        // GET: Item/Create
+        // GET: Items/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Item/Create
+        // POST: Items/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -58,7 +58,7 @@ namespace WonderShop.Controllers
             return View(item);
         }
 
-        // GET: Item/Edit/5
+        // GET: Items/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,7 +73,7 @@ namespace WonderShop.Controllers
             return View(item);
         }
 
-        // POST: Item/Edit/5
+        // POST: Items/Edit/5
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -89,7 +89,7 @@ namespace WonderShop.Controllers
             return View(item);
         }
 
-        // GET: Item/Delete/5
+        // GET: Items/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -104,7 +104,7 @@ namespace WonderShop.Controllers
             return View(item);
         }
 
-        // POST: Item/Delete/5
+        // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
