@@ -65,7 +65,7 @@ namespace WonderShop.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Tryagain, and if the problem persists see your system administrator.");
             }
 
-            //ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
             return View(order);
         }
 
@@ -107,7 +107,7 @@ namespace WonderShop.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Tryagain, and if the problem persists see your system administrator.");
             }
 
-            //ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
             return View(order);
         }
 
