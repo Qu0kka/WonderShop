@@ -50,14 +50,22 @@ namespace WonderShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "OrderID,CustomerID,OrderDate,ShipmentDate,OrderNumber,Status")] Order order)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Orders.Add(order);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Orders.Add(order);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                // Запись ошибки в журнал (добавление имени переменной после DataException)
+                ModelState.AddModelError("", "Unable to save changes. Tryagain, and if the problem persists see your system administrator.");
             }
 
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
+            //ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
             return View(order);
         }
 
@@ -84,29 +92,44 @@ namespace WonderShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OrderID,CustomerID,OrderDate,ShipmentDate,OrderNumber,Status")] Order order)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(order).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(order).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
+            catch (DataException)
+            {
+                // Запись ошибки в журнал (добавление имени переменной после DataException)
+                ModelState.AddModelError("", "Unable to save changes. Tryagain, and if the problem persists see your system administrator.");
+            }
+
+            //ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "Name", order.CustomerID);
             return View(order);
         }
 
         // GET: Order/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id, bool? saveChangesError)
         {
-            if (id == null)
+            if (saveChangesError.GetValueOrDefault())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.ErrorMessage = "Unable to save changes. Try again, and if the problem persists see your system administrator.";
             }
-            Order order = db.Orders.Find(id);
-            if (order == null)
-            {
-                return HttpNotFound();
-            }
-            return View(order);
+            return View(db.Orders.Find(id));
+
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            //Order order = db.Orders.Find(id);
+            //if (order == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View(order);
         }
 
         // POST: Order/Delete/5
@@ -114,9 +137,19 @@ namespace WonderShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Order order = db.Orders.Find(id);
-            db.Orders.Remove(order);
-            db.SaveChanges();
+            try
+            {
+                Order order = db.Orders.Find(id);
+                db.Orders.Remove(order);
+                db.SaveChanges();
+            }
+            catch (DataException)
+            {
+                // Запись ошибок в журнал (добавление имени переменной после DataException)
+                return RedirectToAction("Delete", new System.Web.Routing.RouteValueDictionary {
+                { "id", id },
+                { "saveChangesError", true }});
+            }
             return RedirectToAction("Index");
         }
 

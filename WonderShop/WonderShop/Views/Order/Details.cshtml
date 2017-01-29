@@ -52,6 +52,34 @@
 
     </dl>
 </div>
+
+<div class="display-label">
+    @Html.LabelFor(model => model.OrderItems)
+</div>
+<div class="display-field">
+     <table>
+         <tr>
+             <th>Item Name</th>
+             <th>Item Price</th>
+             <th>Item Count</th>
+         </tr>
+         @foreach (var item in Model.OrderItems)
+         {
+             <tr>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Item.Name)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Item.Price)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.ItemCount)
+                 </td>
+             </tr>
+         }
+     </table>
+</div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.OrderID }) |
     @Html.ActionLink("Back to List", "Index")
