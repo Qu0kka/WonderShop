@@ -48,12 +48,21 @@ namespace WonderShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CustomerID,Name,Code,Address,Discount")] Customer customer)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Customers.Add(customer);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Customers.Add(customer);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
+            catch (DataException)
+            {
+                // Запись ошибки в журнал (добавление имени переменной после DataException)
+                ModelState.AddModelError("", "Unable to save changes. Tryagain, and if the problem persists see your system administrator.");
+            }
+            
 
             return View(customer);
         }
@@ -80,28 +89,42 @@ namespace WonderShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CustomerID,Name,Code,Address,Discount")] Customer customer)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(customer).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(customer).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                // Запись ошибки в журнал (добавление имени переменной после DataException)
+                ModelState.AddModelError("", "Unable to save changes. Tryagain, and if the problem persists see your system administrator.");
             }
             return View(customer);
         }
 
         // GET: Customer/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id, bool? saveChangesError)
         {
-            if (id == null)
+            if (saveChangesError.GetValueOrDefault())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.ErrorMessage = "Unable to save changes. Try again, and if the problem persists see your system administrator.";
             }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
+            return View(db.Customers.Find(id));
+
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            //Customer customer = db.Customers.Find(id);
+            //if (customer == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View(customer);
         }
 
         // POST: Customer/Delete/5
@@ -109,9 +132,19 @@ namespace WonderShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Customer customer = db.Customers.Find(id);
-            db.Customers.Remove(customer);
-            db.SaveChanges();
+            try
+            {
+                Customer customer = db.Customers.Find(id);
+                db.Customers.Remove(customer);
+                db.SaveChanges();
+            }
+            catch (DataException)
+            {
+                // Запись ошибок в журнал (добавление имени переменной после DataException)
+                return RedirectToAction("Delete", new System.Web.Routing.RouteValueDictionary {
+                { "id", id },
+                { "saveChangesError", true }});
+            }
             return RedirectToAction("Index");
         }
 
